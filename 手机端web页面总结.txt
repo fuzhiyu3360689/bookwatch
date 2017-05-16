@@ -1,0 +1,130 @@
+2017/5/11
+1.header头
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+	<meta name="format-detection" content="telephone=no">
+
+
+	忽略页面中的数字识别为电话
+
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	设置苹果工具栏颜色
+
+   	<meta name="apple-mobile-web-app-capable" content="yes" />
+	开启对web app的支持
+
+	<!-- 忽略识别邮箱，主要是针对安卓手机会自动将符合邮箱格式的字符串识别为邮箱地址-->
+	<meta content="email=no" name="format-detection" />
+	<meta name="apple-itunes-app" content="app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL" />
+	<!-- 添加智能 App 广告条 Smart App Banner：告诉浏览器这个网站对应的app，并在页面上显示下载banner:https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/PromotingAppswithAppBanners/PromotingAppswithAppBanners.html -->
+	<!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+	<meta name="HandheldFriendly" content="true">
+	<!-- 微软的老式浏览器 -->
+	<meta name="MobileOptimized" content="320">
+	<!-- uc强制竖屏 -->
+	<meta name="screen-orientation" content="portrait">
+	<!-- QQ强制竖屏 -->
+	<meta name="x5-orientation" content="portrait">
+	<!-- UC强制全屏 -->
+	<meta name="full-screen" content="yes">
+	<!-- QQ强制全屏 -->
+	<meta name="x5-fullscreen" content="true">
+	<!-- UC应用模式 -->
+	<meta name="browsermode" content="application">
+	<!-- QQ应用模式 -->
+	<meta name="x5-page-mode" content="app">
+	<!-- windows phone 点击无高光 -->
+	<meta name="msapplication-tap-highlight" content="no">
+2.小技巧
+	1.手机端获取滚动条（ios android）
+		window.scrollY  window.scrollX
+	2.禁止用户选择文本
+	   -webkit-user-select:none
+	3.base64编码图片代替URL图片
+		由于在网页加载的时候，没一张图片，都要进行HTTP资源请求，所以将图片进行编码，减小单次请求的流量，从而加快网站的加载速度，这个的实现可以使用在线的编码工具即可，地址：http://www.fishlee.net/Tools/GetImageBase64Code#codeResult
+	4.<!-- 选择照片 -->
+	<input type=file accept="image/*">
+	<!-- 选择视频 -->
+	<input type=file accept="video/*">
+	5.设置placeholder时候 focus时候文字没有隐藏
+	input:focus::-webkit-input-placeholder{
+    opacity: 0;
+	}
+	6.android局部滚动时隐藏原生滚动条
+		::-webkit-scrollbar{
+    	opacity: 0;
+	}
+	7.动态设置body fontsize属性
+		$(function(){
+	    var fontsize=window.screen.width/20;
+	    $("body").css("fontSize",fontsize);
+	    $("#search>input").css("height",fontsize*1.2);
+	    $("#footer").click(function(){
+	        //alert("该内容未设置");        
+	    });
+	})
+	8. 关于em
+		html{
+		font-size:100%;
+		}
+		em大小的确定主要是通过上级父类的font-size属性来确定的，换句话说也就是1em等于上级的font-size的大小，默认的font-size是16px
+	9.设备像素比dpr(device pixel ratio)
+
+	设备像素比简称为dpr，其定义了物理像素和设备独立像素的对应关系。它的值可以按下面的公式计算得到：
+
+	设备像素比 ＝ 物理像素 / 设备独立像素
+
+	也就是说，二倍屏的dpr是2, 三倍屏是3。
+
+	在JavaScript中，可以通过window.devicePixelRatio获取到当前设备的dpr。而在CSS中，可以通过-webkit-device-pixel-ratio，-webkit-min-device-pixel-ratio和 -webkit-max-device-pixel-ratio进行媒体查询，对不同dpr的设备，做一些样式适配(这里只针对webkit内核的浏览器和webview)。
+
+	viewport的scale和dpr是倒数
+
+	屏幕密度PPI(pixel pe
+	10.动态设置data-dpr和meta:viewport
+
+		// 对iOS设备进行dpr的判断，对于Android系列，始终认为其dpr为1。
+		if (!dpr && !scale) {
+		var isAndroid = win.navigator.appVersion.match(/android/gi);
+		var isIPhone = win.navigator.appVersion.match(/iphone/gi);
+		var devicePixelRatio = win.devicePixelRatio;
+		if (isIPhone) {
+		    // iOS下，对于2和3的屏，用2倍的方案，其余的用1倍方案
+		    if (devicePixelRatio >= 3 && (!dpr || dpr >= 3)) {                
+		        dpr = 3;
+		    } else if (devicePixelRatio >= 2 && (!dpr || dpr >= 2)){
+		        dpr = 2;
+		    } else {
+		        dpr = 1;
+		    }
+		} else {
+		    // 其他设备下，仍旧使用1倍的方案
+		    dpr = 1;
+		}
+		scale = 1 / dpr;
+		}
+		// 动态改写meta:viewport标签
+		var metaEl = doc.createElement('meta');
+		var scale = isRetina ? 0.5:1;
+		metaEl.setAttribute('name', 'viewport');
+		metaEl.setAttribute('content', 'initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no');
+		if (docEl.firstElementChild) {
+		    document.documentElement.firstElementChild.appendChild(metaEl);
+		} else {
+		    var wrap = doc.createElement('div');
+		    wrap.appendChild(metaEl);
+		    documen.write(wrap.innerHTML);
+		}
+	11.不同dpr设置不同的字体大小
+		.a{
+		  font-size:12px;
+		}
+		[data-dpr="2"] .a{
+		  font-size: 24px;
+		}
+		[data-dpr="3"] .a{
+		  font-size: 36px;
+		}
+	12.Retina屏的1px边框

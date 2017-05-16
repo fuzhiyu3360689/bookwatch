@@ -1,0 +1,32 @@
+《html5 移动端web开发指南》
+	实例写法完全为H5写法 ，不兼容xhtml
+第4章 离线缓存
+	4.3.2
+		1.applicationCache对象和事件 ：对象记录着本地缓存的各种状态及时间。缓存的状态可通过window.applicationCache.status获得。
+		六种状态:0 为缓存 1 空闲 2 检查 3 下载中 4更新准备中 5 过期状态
+
+		2.实际应用通过事件监听 
+			applicationCache.addEvenetLisenter('updateready',function(){
+				//资源文件下载中
+			})
+		3.判断浏览器是否在线
+			if(window.navigator.online){
+
+			}else{
+
+			}
+第5章 移动端设备的常见HTML5表单元素
+	一.新表单特性
+		1.form属性
+			from外的input只要给其添加 form="id"属性，那么它就属于form的input属性
+			eg:<form id="test">
+
+				<from/>
+				<input form=test>
+		2.placheholder属性
+			不过多赘述
+		3.autofocus 自动获取焦点 Tip：一个html页面只能有一个指定控件属性具有该属性
+		eg:<input type="text" autfocus>
+		4.List 和 datalist 属性仅有Open浏览器支持,list主要作用是提示文本输入，提示的数据源则有datalist元素结合使用
+		5.autocomplete属性
+			
